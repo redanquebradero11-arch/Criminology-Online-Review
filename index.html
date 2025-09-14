@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCRC - Lab Criminology Review Center</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Light gray-blue background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 480px;
+            padding: 32px;
+            box-sizing: border-box;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .input-field {
+            width: 100%;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            border: 2px solid #e2e8f0; /* Light gray border */
+            border-radius: 8px;
+            font-size: 16px;
+            color: #334155; /* Dark gray text */
+            transition: border-color 0.3s ease;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #2563eb; /* Blue focus border */
+        }
+        .btn-primary {
+            background-color: #2563eb; /* Blue button */
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            width: 100%;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #1e40af; /* Darker blue on hover */
+            transform: translateY(-2px);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        .error-message, .success-message, .info-message {
+            margin-top: -10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none; /* Hidden by default */
+        }
+        .error-message {
+            color: #ef4444; /* Red for errors */
+        }
+        .success-message {
+            color: #22c55e; /* Green for success */
+        }
+        .info-message {
+            color: #3b82f6; /* Blue for info */
+        }
+        .hidden {
+            display: none;
+        }
+        .main-content-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 960px; /* Wider for content */
+            padding: 32px;
+            box-sizing: border-box;
+            text-align: left;
+        }
+        .main-content-card h1 {
+            color: #1e293b; /* Darker heading */
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        .main-content-card h2 {
+            color: #334155;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.875rem;
+            font-weight: 600;
+        }
+        .main-content-card p {
+            color: #475569; /* Medium gray text */
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        .main-content-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .main-content-card ul li {
+            background-color: #f8fafc;
+            border-left: 4px solid #3b82f6;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            color: #334155;
+        }
+        .btn-logout {
+            background-color: #dc2626; /* Red for logout */
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            border: none;
+            margin-top: 30px;
+        }
+        .btn-logout:hover {
+            background-color: #b91c1c;
+            transform: translateY(-2px);
+        }
+        .btn-logout:active {
+            transform: translateY(0);
+        }
+        .logo {
+            margin-bottom: 20px; /* Space below the logo */
+            max-width: 150px; /* Max width for the logo */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 8px; /* Rounded corners for the logo */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for the logo */
+        }
+        .link-text {
+            color: #2563eb;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: color 0.3s ease;
+        }
+        .link-text:hover {
+            color: #1e40af;
+            text-decoration: underline;
+        }
+        .flex-col-gap-20 {
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* Gap between form elements */
+        }
+
+        /* Styles for Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .navbar .logo {
+            margin-bottom: 0; /* Override default logo margin */
+            max-width: 100px;
+            box-shadow: none;
+            border-radius: 0;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            right: 0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .dropbtn {
+            background-color: #2563eb;
+            color: white;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        .dropbtn:hover {
+            background-color: #1e40af;
+        }
+
+        /* Admin specific styles */
+        .admin-section {
+            background-color: #e0f2fe; /* Light blue background for admin sections */
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px dashed #93c5fd;
+        }
+        .admin-section h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1d4ed8;
+            margin-bottom: 15px;
+        }
+        .admin-section ul li {
+            background-color: #eff6ff;
+            border-left-color: #60a5fa;
+        }
+        .resource-folder {
+            background-color: #f0f9ff;
+            border: 1px solid #bfdbfe;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .resource-folder:hover {
+            background-color: #e0f2fe;
+        }
+        .resource-folder-content {
+            display: none;
+            margin-top: 10px;
+            padding-left: 20px;
+            border-left: 2px solid #a78bfa;
+        }
+        .resource-folder-content li {
+            border-left-color: #8b5cf6;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Login Form Container -->
+    <div id="login-container" class="container">
+        <!-- Logo for the login page -->
+        <img src="https://placehold.co/150x75/E0F2F7/000000?text=LRC+Logo" alt="LRC Logo" class="logo">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">LRC Login</h2>
+        <p class="text-sm text-gray-600 mb-8">
+            Please log in to access the Lab Criminology Review Center resources.
+            <br>
+        </p>
+
+        <form id="login-form" class="w-full flex-col-gap-20">
+            <input
+                type="email"
+                id="login-email"
+                placeholder="Email"
+                class="input-field"
+                required
+            />
+            <input
+                type="password"
+                id="login-password"
+                placeholder="Password"
+                class="input-field"
+                required
+            />
+            <p id="login-error-message" class="error-message"></p>
+            <p id="login-info-message" class="info-message"></p>
+            <button type="submit" class="btn-primary">Login</button>
+        </form>
+        <p id="register-link" class="link-text">Don't have an account? Register Now</p>
+        <p id="forgot-password-link" class="link-text">Forgot Password?</p>
+    </div>
+
+    <!-- Register Account Container -->
+    <div id="register-container" class="container hidden">
+        <!-- Logo for the register page -->
+        <img src="https://placehold.co/150x75/E0F2F7/000000?text=LRC+Logo" alt="LRC Logo" class="logo">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">Register Account</h2>
+        <p class="text-sm text-gray-600 mb-8">
+            Create your new LRC account. Your account will be pending admin approval.
+        </p>
+
+        <form id="register-form" class="w-full flex-col-gap-20">
+            <input
+                type="email"
+                id="register-email"
+                placeholder="Your Email"
+                class="input-field"
+                required
+            />
+            <input
+                type="password"
+                id="register-password"
+                placeholder="Choose Password"
+                class="input-field"
+                required
+            />
+            <input
+                type="password"
+                id="register-confirm-password"
+                placeholder="Confirm Password"
+                class="input-field"
+                required
+            />
+            <p id="register-error-message" class="error-message"></p>
+            <p id="register-success-message" class="success-message"></p>
+            <button type="submit" class="btn-primary">Register</button>
+        </form>
+        <p id="back-to-login-from-register" class="link-text">Back to Login</p>
+    </div>
+
+    <!-- Forgot Password Container -->
+    <div id="forgot-password-container" class="container hidden">
+        <!-- Logo for the forgot password page -->
+        <img src="https://placehold.co/150x75/E0F2F7/000000?text=LRC+Logo" alt="LRC Logo" class="logo">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">Forgot Password?</h2>
+        <p class="text-sm text-gray-600 mb-8">
+            Enter your email to reset your password.
+        </p>
+
+        <form id="forgot-password-form" class="w-full flex-col-gap-20">
+            <input
+                type="email"
+                id="forgot-email"
+                placeholder="Your Email"
+                class="input-field"
+                required
+            />
+            <p id="forgot-error-message" class="error-message"></p>
+            <p id="forgot-success-message" class="success-message"></p>
+            <button type="submit" class="btn-primary">Reset Password</button>
+        </form>
+        <p id="back-to-login-from-forgot" class="link-text">Back to Login</p>
+    </div>
+
+    <!-- Main Page Content Container -->
+    <div id="main-page-container" class="main-content-card hidden">
+        <div class="navbar">
+            <!-- Logo for the main page -->
+            <img src="https://placehold.co/150x75/E0F2F7/000000?text=LRC+Logo" alt="LRC Logo" class="logo">
+            <div class="dropdown">
+                <button class="dropbtn">Menu</button>
+                <div class="dropdown-content">
+                    <a href="#" id="menu-profile">Profile</a>
+                    <a href="#" id="menu-account-settings">Account Settings</a>
+                    <a href="#" id="menu-logout">Logout</a>
+                </div>
+            </div>
+        </div>
+
+        <h1 class="text-5xl font-extrabold text-blue-700 mb-4">Welcome to LRC, <span id="display-username"></span>!</h1>
+        <p class="text-lg text-gray-700 mb-8">
+            Your premier resource for Criminology Review! Prepare for success with our comprehensive materials and expert guidance.
+        </p>
+
+        <!-- Announcements Section -->
+        <h2 class="text-2xl font-semibold text-gray-800">Announcements</h2>
+        <div id="announcements-list" class="mb-6">
+            <!-- Announcements will be loaded here -->
+            <p class="text-gray-500">No announcements yet.</p>
+        </div>
+
+        <!-- Upcoming Exams Section -->
+        <h2 class="text-2xl font-semibold text-gray-800">Upcoming Mock Exams</h2>
+        <ul id="upcoming-exams-list" class="mb-6">
+            <!-- Exams will be loaded here -->
+            <li class="text-gray-500">No upcoming exams scheduled.</li>
+        </ul>
+
+        <!-- Resources Section -->
+        <h2 class="text-2xl font-semibold text-gray-800">Criminology Resources</h2>
+        <p class="text-gray-700 mb-4">
+            Access our extensive library of notes, practice questions, and past board exam drills by clicking on the folders below.
+        </p>
+        <div id="resources-section">
+            <!-- Resource folders will be loaded here -->
+            <p class="text-gray-500">No resources available yet.</p>
+        </div>
+
+        <!-- Admin Dashboard (Visible only to Admins) -->
+        <div id="admin-dashboard" class="admin-section hidden">
+            <h3>Admin Dashboard</h3>
+
+            <!-- Manage Users (Admin Approval) -->
+            <div class="mb-8">
+                <h4 class="text-xl font-semibold text-blue-800 mb-4">Manage Pending Users</h4>
+                <ul id="pending-users-list" class="mb-4">
+                    <!-- Pending users will be loaded here -->
+                    <li>No pending users.</li>
+                </ul>
+            </div>
+
+            <!-- Add Announcement Form -->
+            <div class="mb-8">
+                <h4 class="text-xl font-semibold text-blue-800 mb-4">Add New Announcement</h4>
+                <form id="add-announcement-form" class="flex-col-gap-20">
+                    <input type="text" id="announcement-title" placeholder="Announcement Title" class="input-field" required>
+                    <textarea id="announcement-content" placeholder="Announcement Content" class="input-field" rows="4" required></textarea>
+                    <button type="submit" class="btn-primary">Post Announcement</button>
+                    <p id="announcement-success-message" class="success-message"></p>
+                    <p id="announcement-error-message" class="error-message"></p>
+                </form>
+            </div>
+
+            <!-- Add Upcoming Exam Form -->
+            <div class="mb-8">
+                <h4 class="text-xl font-semibold text-blue-800 mb-4">Add Upcoming Exam</h4>
+                <form id="add-exam-form" class="flex-col-gap-20">
+                    <input type="text" id="exam-title" placeholder="Exam Title" class="input-field" required>
+                    <input type="date" id="exam-date" class="input-field" required>
+                    <button type="submit" class="btn-primary">Add Exam</button>
+                    <p id="exam-success-message" class="success-message"></p>
+                    <p id="exam-error-message" class="error-message"></p>
+                </form>
+            </div>
+
+            <!-- Manage Resources (Simplified for client-side demo) -->
+            <div>
+                <h4 class="text-xl font-semibold text-blue-800 mb-4">Manage Resources</h4>
+                <p class="text-gray-700 mb-4">
+                    Admins can add new subjects and files to the resource folders.
+                </p>
+                <form id="add-resource-form" class="flex-col-gap-20">
+                    <select id="resource-area" class="input-field" required>
+                        <option value="">Select Criminology Area</option>
+                        <option value="Criminal Jurisprudence and Procedure">Criminal Jurisprudence and Procedure</option>
+                        <option value="Law Enforcement Administration">Law Enforcement Administration</option>
+                        <option value="Criminalistics">Criminalistics</option>
+                        <option value="Crime Detection and Investigation">Crime Detection and Investigation</option>
+                        <option value="Sociology of Crimes and Ethics">Sociology of Crimes and Ethics</option>
+                        <option value="Correctional Administration">Correctional Administration</option>
+                    </select>
+                    <input type="text" id="resource-subject" placeholder="New Subject Name (e.g., Intro to Criminology)" class="input-field" required>
+                    <input type="text" id="resource-filename" placeholder="File Name (e.g., Notes_Chapter1.pdf)" class="input-field" required>
+                    <!-- In a real app, this would be <input type="file"> with Firebase Storage -->
+                    <input type="url" id="resource-fileurl" placeholder="File URL (e.g., https://example.com/file.pdf)" class="input-field">
+                    <button type="submit" class="btn-primary">Add Resource</button>
+                    <p id="resource-success-message" class="success-message"></p>
+                    <p id="resource-error-message" class="error-message"></p>
+                </form>
+            </div>
+        </div>
+        <!-- End Admin Dashboard -->
+
+    </div>
+
+    <!-- Profile & Account Settings Containers (Placeholders) -->
+    <div id="profile-container" class="main-content-card hidden">
+        <div class="navbar">
+            <img src="https://placehold.co/150x75/E0F2F7/000000?text=LRC+Logo" alt="LRC Logo" class="logo">
+            <div class="dropdown">
+                <button class="dropbtn">Menu</button>
+                <div class="dropdown-content">
+                    <a href="#" id="menu-profile-back">Profile</a>
+                    <a href="#" id="menu-account-settings-back">Account Settings</a>
+                    <a href="#" id="menu-logout-profile">Logout</a>
+                </div>
+            </div>
+        </div>
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">Your Profile</h1>
+        <p class="text-gray-700">This is where you can manage your personal information.</p>
+        <p class="text-lg text-gray-700 mt-4">Current User ID: <span id="profile-user-id"></span></p>
+        <p class="text-lg text-gray-700">Current User Email: <span id="profile-user-email"></span></p>
+        <p class="text-lg text-gray-700">Current User Role: <span id="profile-user-role"></span></p>
+        <button class="btn-logout" onclick="showMainPage();">Back to Main Page</button>
+    </div>
+
+    <div id="account-settings-container" class="main-content-card hidden">
+        <div class="navbar">
+            <img src="https://placehold.co/150x75/E0F2F7/000000?text=LRC+Logo" alt="LRC Logo" class="logo">
+            <div class="dropdown">
+                <button class="dropbtn">Menu</button>
+                <div class="dropdown-content">
+                    <a href="#" id="menu-profile-settings-back">Profile</a>
+                    <a href="#" id="menu-account-settings-back-again">Account Settings</a>
+                    <a href="#" id="menu-logout-settings">Logout</a>
+                </div>
+            </div>
+        </div>
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">Account Settings</h1>
+        <p class="text-gray-700 mb-4">Update your email or password.</p>
+
+        <form id="update-email-form" class="w-full flex-col-gap-20 mb-8">
+            <h4 class="text-xl font-semibold text-blue-800 mb-2">Update Email</h4>
+            <input type="email" id="new-email" placeholder="New Email" class="input-field" required>
+            <input type="password" id="current-password-email" placeholder="Current Password" class="input-field" required>
+            <p id="update-email-error-message" class="error-message"></p>
+            <p id="update-email-success-message" class="success-message"></p>
+            <button type="submit" class="btn-primary">Update Email</button>
+        </form>
+
+        <form id="update-password-form" class="w-full flex-col-gap-20">
+            <h4 class="text-xl font-semibold text-blue-800 mb-2">Change Password</h4>
+            <input type="password" id="new-password" placeholder="New Password" class="input-field" required>
+            <input type="password" id="confirm-new-password" placeholder="Confirm New Password" class="input-field" required>
+            <input type="password" id="current-password-password" placeholder="Current Password" class="input-field" required>
+            <p id="update-password-error-message" class="error-message"></p>
+            <p id="update-password-success-message" class="success-message"></p>
+            <button type="submit" class="btn-primary">Change Password</button>
+        </form>
+        <button class="btn-logout" onclick="showMainPage();">Back to Main Page</button>
+    </div>
+
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import {
+            getAuth,
+            signInAnonymously,
+            signInWithCustomToken,
+            onAuthStateChanged,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            signOut,
+            sendPasswordResetEmail,
+            updateEmail,
+            updatePassword,
+            reauthenticateWithCredential,
+            EmailAuthProvider
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import {
+            getFirestore,
+            doc,
+            getDoc,
+            setDoc,
+            addDoc,
+            updateDoc,
+            deleteDoc,
+            onSnapshot,
+            collection,
+            query,
+            where,
+            getDocs,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Configuration (provided by the environment)
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        let currentUserRole = null; // To store the current user's role
+        let currentUserId = null; // To store the current user's UID
+
+        // --- DOM Elements ---
+        const loginContainer = document.getElementById('login-container');
+        const registerContainer = document.getElementById('register-container');
+        const forgotPasswordContainer = document.getElementById('forgot-password-container');
+        const mainPageContainer = document.getElementById('main-page-container');
+        const profileContainer = document.getElementById('profile-container');
+        const accountSettingsContainer = document.getElementById('account-settings-container');
+
+        // Login elements
+        const loginForm = document.getElementById('login-form');
+        const loginEmailInput = document.getElementById('login-email');
+        const loginPasswordInput = document.getElementById('login-password');
+        const loginErrorMessage = document.getElementById('login-error-message');
+        const loginInfoMessage = document.getElementById('login-info-message');
+        const registerLink = document.getElementById('register-link');
+        const forgotPasswordLink = document.getElementById('forgot-password-link');
+
+        // Register elements
+        const registerForm = document.getElementById('register-form');
+        const registerEmailInput = document.getElementById('register-email');
+        const registerPasswordInput = document.getElementById('register-password');
+        const registerConfirmPasswordInput = document.getElementById('register-confirm-password');
+        const registerErrorMessage = document.getElementById('register-error-message');
+        const registerSuccessMessage = document.getElementById('register-success-message');
+        const backToLoginFromRegisterLink = document.getElementById('back-to-login-from-register');
+
+        // Forgot Password elements
+        const forgotPasswordForm = document.getElementById('forgot-password-form');
+        const forgotEmailInput = document.getElementById('forgot-email');
+        const forgotErrorMessage = document.getElementById('forgot-error-message');
+        const forgotSuccessMessage = document.getElementById('forgot-success-message');
+        const backToLoginFromForgotLink = document.getElementById('back-to-login-from-forgot');
+
+        // Main page elements
+        const displayUsername = document.getElementById('display-username');
+        const announcementsList = document.getElementById('announcements-list');
+        const upcomingExamsList = document.getElementById('upcoming-exams-list');
+        const resourcesSection = document.getElementById('resources-section');
+        const adminDashboard = document.getElementById('admin-dashboard');
+        const logoutButton = document.getElementById('menu-logout');
+        const logoutButtonProfile = document.getElementById('menu-logout-profile');
+        const logoutButtonSettings = document.getElementById('menu-logout-settings');
+        const menuProfileLink = document.getElementById('menu-profile');
+        const menuAccountSettingsLink = document.getElementById('menu-account-settings');
+        const menuProfileBackLink = document.getElementById('menu-profile-back');
+        const menuAccountSettingsBackLink = document.getElementById('menu-account-settings-back');
+        const menuProfileSettingsBackLink = document.getElementById('menu-profile-settings-back');
+        const menuAccountSettingsBackAgainLink = document.getElementById('menu-account-settings-back-again');
+
+        // Admin Dashboard elements
+        const pendingUsersList = document.getElementById('pending-users-list');
+        const addAnnouncementForm = document.getElementById('add-announcement-form');
+        const announcementTitleInput = document.getElementById('announcement-title');
+        const announcementContentInput = document.getElementById('announcement-content');
+        const announcementSuccessMessage = document.getElementById('announcement-success-message');
+        const announcementErrorMessage = document.getElementById('announcement-error-message');
+
+        const addExamForm = document.getElementById('add-exam-form');
+        const examTitleInput = document.getElementById('exam-title');
+        const examDateInput = document.getElementById('exam-date');
+        const examSuccessMessage = document.getElementById('exam-success-message');
+        const examErrorMessage = document.getElementById('exam-error-message');
+
+        const addResourceForm = document.getElementById('add-resource-form');
+        const resourceAreaSelect = document.getElementById('resource-area');
+        const resourceSubjectInput = document.getElementById('resource-subject');
+        const resourceFilenameInput = document.getElementById('resource-filename');
+        const resourceFileUrlInput = document.getElementById('resource-fileurl');
+        const resourceSuccessMessage = document.getElementById('resource-success-message');
+        const resourceErrorMessage = document.getElementById('resource-error-message');
+
+        // Profile & Account Settings elements
+        const profileUserId = document.getElementById('profile-user-id');
+        const profileUserEmail = document.getElementById('profile-user-email');
+        const profileUserRole = document.getElementById('profile-user-role');
+
+        const updateEmailForm = document.getElementById('update-email-form');
+        const newEmailInput = document.getElementById('new-email');
+        const currentPasswordEmailInput = document.getElementById('current-password-email');
+        const updateEmailErrorMessage = document.getElementById('update-email-error-message');
+        const updateEmailSuccessMessage = document.getElementById('update-email-success-message');
+
+        const updatePasswordForm = document.getElementById('update-password-form');
+        const newPasswordInput = document.getElementById('new-password');
+        const confirmNewPasswordInput = document.getElementById('confirm-new-password');
+        const currentPasswordPasswordInput = document.getElementById('current-password-password');
+        const updatePasswordErrorMessage = document.getElementById('update-password-error-message');
+        const updatePasswordSuccessMessage = document.getElementById('update-password-success-message');
+
+        // Helper function to display messages
+        function showMessage(element, message, type) {
+            element.textContent = message;
+            element.style.display = 'block';
+            if (type === 'error') {
+                element.style.color = '#ef4444';
+            } else if (type === 'success') {
+                element.style.color = '#22c55e';
+            } else if (type === 'info') {
+                element.style.color = '#3b82f6';
+            }
+        }
+
+        function hideMessage(element) {
+            element.style.display = 'none';
+            element.textContent = '';
+        }
+
+        // --- Helper Functions to Show/Hide Pages ---
+        function hideAllContainers() {
+            loginContainer.classList.add('hidden');
+            registerContainer.classList.add('hidden');
+            forgotPasswordContainer.classList.add('hidden');
+            mainPageContainer.classList.add('hidden');
+            profileContainer.classList.add('hidden');
+            accountSettingsContainer.classList.add('hidden');
+
+            // Hide all messages across all forms
+            hideMessage(loginErrorMessage);
+            hideMessage(loginInfoMessage);
+            hideMessage(registerErrorMessage);
+            hideMessage(registerSuccessMessage);
+            hideMessage(forgotErrorMessage);
+            hideMessage(forgotSuccessMessage);
+            hideMessage(announcementSuccessMessage);
+            hideMessage(announcementErrorMessage);
+            hideMessage(examSuccessMessage);
+            hideMessage(examErrorMessage);
+            hideMessage(resourceSuccessMessage);
+            hideMessage(resourceErrorMessage);
+            hideMessage(updateEmailErrorMessage);
+            hideMessage(updateEmailSuccessMessage);
+            hideMessage(updatePasswordErrorMessage);
+            hideMessage(updatePasswordSuccessMessage);
+        }
+
+        function showLoginPage() {
+            hideAllContainers();
+            loginContainer.classList.remove('hidden');
+            loginForm.reset(); // Clear login form fields
+        }
+
+        function showRegisterPage() {
+            hideAllContainers();
+            registerContainer.classList.remove('hidden');
+            registerForm.reset(); // Clear register form fields
+        }
+
+        function showForgotPasswordPage() {
+            hideAllContainers();
+            forgotPasswordContainer.classList.remove('hidden');
+            forgotPasswordForm.reset(); // Clear forgot password form fields
+        }
+
+        function showMainPage() {
+            hideAllContainers();
+            mainPageContainer.classList.remove('hidden');
+            // Display username in welcome message
+            if (auth.currentUser) {
+                displayUsername.textContent = auth.currentUser.email || 'Guest';
+            }
+            // Conditionally show admin dashboard
+            if (currentUserRole === 'admin') {
+                adminDashboard.classList.remove('hidden');
+                fetchPendingUsers(); // Fetch and display pending users for admin
+            } else {
+                adminDashboard.classList.add('hidden');
+            }
+            fetchAnnouncements();
+            fetchUpcomingExams();
+            fetchResources();
+        }
+
+        function showProfilePage() {
+            hideAllContainers();
+            profileContainer.classList.remove('hidden');
+            if (auth.currentUser) {
+                profileUserId.textContent = auth.currentUser.uid;
+                profileUserEmail.textContent = auth.currentUser.email;
+                profileUserRole.textContent = currentUserRole;
+            }
+        }
+
+        function showAccountSettingsPage() {
+            hideAllContainers();
+            accountSettingsContainer.classList.remove('hidden');
+            updateEmailForm.reset();
+            updatePasswordForm.reset();
+        }
+
+        // --- Firebase Authentication & Firestore User Management ---
+
+        // Handle initial authentication and subsequent state changes
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUserId = user.uid;
+                try {
+                    const userDocRef = doc(db, `artifacts/${appId}/users`, user.uid);
+                    const userDocSnap = await getDoc(userDocRef);
+
+                    if (userDocSnap.exists()) {
+                        currentUserRole = userDocSnap.data().role;
+                        if (currentUserRole === 'pending') {
+                            // If user is pending, log them out and show info message
+                            await signOut(auth);
+                            showLoginPage();
+                            showMessage(loginInfoMessage, 'Your account is pending admin approval. Please wait.', 'info');
+                        } else {
+                            // User is approved (user or admin), show main page
+                            showMainPage();
+                        }
+                    } else {
+                        // This should ideally not happen if a user is created via registration form.
+                        // If a user exists in Auth but not Firestore (e.g., deleted Firestore doc), treat as pending.
+                        await signOut(auth);
+                        showLoginPage();
+                        showMessage(loginInfoMessage, 'Your account status could not be determined. Please register again or contact support.', 'info');
+                    }
+                } catch (error) {
+                    console.error("Error fetching user role:", error);
+                    await signOut(auth);
+                    showLoginPage();
+                    showMessage(loginErrorMessage, 'Error retrieving user data. Please try again.', 'error');
+                }
+            } else {
+                // User is signed out, show login page
+                currentUserId = null;
+                currentUserRole = null;
+                showLoginPage();
+            }
+        });
+
+        // Initial sign-in with custom token or anonymously if not available
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                try {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } catch (error) {
+                    console.error("Error signing in with custom token:", error);
+                    // Fallback to anonymous or just let onAuthStateChanged handle it
+                    await signInAnonymously(auth); // Sign in anonymously as a fallback
+                }
+            } else {
+                await signInAnonymously(auth); // Sign in anonymously if no custom token
+            }
+        });
+
+        // --- Event Listeners ---
+
+        // Login Form Submission
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            hideMessage(loginErrorMessage);
+            hideMessage(loginInfoMessage);
+
+            const email = loginEmailInput.value;
+            const password = loginPasswordInput.value;
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                // onAuthStateChanged will handle the redirection after successful login
+            } catch (error) {
+                console.error("Login error:", error);
+                let errorMessage = "Login failed. Please check your email and password.";
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    errorMessage = 'Invalid email or password.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Please enter a valid email address.';
+                }
+                showMessage(loginErrorMessage, errorMessage, 'error');
+            }
+        });
+
+        // Navigate to Register Page
+        registerLink.addEventListener('click', showRegisterPage);
+
+        // Navigate to Forgot Password Page
+        forgotPasswordLink.addEventListener('click', showForgotPasswordPage);
+
+        // Register Form Submission
+        registerForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            hideMessage(registerErrorMessage);
+            hideMessage(registerSuccessMessage);
+
+            const email = registerEmailInput.value;
+            const password = registerPasswordInput.value;
+            const confirmPassword = registerConfirmPasswordInput.value;
+
+            if (password !== confirmPassword) {
+                showMessage(registerErrorMessage, 'Error: Passwords do not match.', 'error');
+                return;
+            }
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // Add user to Firestore with 'pending' role
+                const userDocRef = doc(db, `artifacts/${appId}/users`, user.uid);
+                await setDoc(userDocRef, {
+                    email: user.email,
+                    role: 'pending', // Default role for new registrations
+                    createdAt: serverTimestamp()
+                });
+
+                showMessage(registerSuccessMessage, 'Registration successful! Your account is pending admin approval. Please login later.', 'success');
+                registerForm.reset();
+                setTimeout(showLoginPage, 3000); // Redirect to login after a delay
+            } catch (error) {
+                console.error("Registration error:", error);
+                let errorMessage = "Registration failed. Please try again.";
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = 'Email already registered. Please login or reset password.';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = 'Password should be at least 6 characters.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Please enter a valid email address.';
+                }
+                showMessage(registerErrorMessage, errorMessage, 'error');
+            }
+        });
+
+        // Forgot Password Form Submission
+        forgotPasswordForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            hideMessage(forgotErrorMessage);
+            hideMessage(forgotSuccessMessage);
+
+            const email = forgotEmailInput.value;
+
+            try {
+                await sendPasswordResetEmail(auth, email);
+                showMessage(forgotSuccessMessage, 'Password reset email sent! Please check your inbox.', 'success');
+                forgotPasswordForm.reset();
+                setTimeout(showLoginPage, 3000); // Redirect to login after a delay
+            } catch (error) {
+                console.error("Forgot password error:", error);
+                let errorMessage = "Failed to send reset email. Please check the email address.";
+                if (error.code === 'auth/user-not-found') {
+                    errorMessage = 'No user found with that email address.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Please enter a valid email address.';
+                }
+                showMessage(forgotErrorMessage, errorMessage, 'error');
+            }
+        });
+
+        // Back to Login links
+        backToLoginFromRegisterLink.addEventListener('click', showLoginPage);
+        backToLoginFromForgotLink.addEventListener('click', showLoginPage);
+
+        // Logout Buttons
+        logoutButton.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                // onAuthStateChanged will handle redirection to login page
+            } catch (error) {
+                console.error("Logout error:", error);
+            }
+        });
+        logoutButtonProfile.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+            } catch (error) {
+                console.error("Logout error:", error);
+            }
+        });
+        logoutButtonSettings.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+            } catch (error) {
+                console.error("Logout error:", error);
+            }
+        });
+
+        // Navigation Menu Links
+        menuProfileLink.addEventListener('click', showProfilePage);
+        menuAccountSettingsLink.addEventListener('click', showAccountSettingsPage);
+        menuProfileBackLink.addEventListener('click', showProfilePage);
+        menuAccountSettingsBackLink.addEventListener('click', showAccountSettingsPage);
+        menuProfileSettingsBackLink.addEventListener('click', showProfilePage);
+        menuAccountSettingsBackAgainLink.addEventListener('click', showAccountSettingsPage);
+
+
+        // --- Firebase Data Fetching and Display ---
+
+        // Fetch and display Announcements
+        async function fetchAnnouncements() {
+            if (!currentUserId || currentUserRole === 'pending') { return; } // Only for authenticated and approved users
+            announcementsList.innerHTML = '<p class="text-gray-500">Loading announcements...</p>';
+            try {
+                const announcementsCol = collection(db, `artifacts/${appId}/public/data/announcements`);
+                const q = query(announcementsCol);
+                onSnapshot(q, (snapshot) => {
+                    if (snapshot.empty) {
+                        announcementsList.innerHTML = '<p class="text-gray-500">No announcements yet.</p>';
+                        return;
+                    }
+                    announcementsList.innerHTML = ''; // Clear previous announcements
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        const announcementDiv = document.createElement('div');
+                        announcementDiv.classList.add('bg-blue-50', 'border-l-4', 'border-blue-500', 'p-4', 'mb-3', 'rounded-lg');
+                        announcementDiv.innerHTML = `
+                            <h3 class="font-bold text-blue-800">${data.title}</h3>
+                            <p class="text-gray-700">${data.content}</p>
+                            <p class="text-xs text-gray-500 mt-2">${data.createdAt ? new Date(data.createdAt.toDate()).toLocaleString() : 'N/A'}</p>
+                        `;
+                        announcementsList.appendChild(announcementDiv);
+                    });
+                });
+            } catch (error) {
+                console.error("Error fetching announcements:", error);
+                announcementsList.innerHTML = '<p class="text-red-500">Failed to load announcements.</p>';
+            }
+        }
+
+        // Fetch and display Upcoming Exams
+        async function fetchUpcomingExams() {
+            if (!currentUserId || currentUserRole === 'pending') { return; } // Only for authenticated and approved users
+            upcomingExamsList.innerHTML = '<li class="text-gray-500">Loading upcoming exams...</li>';
+            try {
+                const examsCol = collection(db, `artifacts/${appId}/public/data/upcomingExams`);
+                const q = query(examsCol);
+                onSnapshot(q, (snapshot) => {
+                    if (snapshot.empty) {
+                        upcomingExamsList.innerHTML = '<li class="text-gray-500">No upcoming exams scheduled.</li>';
+                        return;
+                    }
+                    upcomingExamsList.innerHTML = ''; // Clear previous exams
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        const listItem = document.createElement('li');
+                        listItem.textContent = `${data.title} - ${new Date(data.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`;
+                        upcomingExamsList.appendChild(listItem);
+                    });
+                });
+            } catch (error) {
+                console.error("Error fetching upcoming exams:", error);
+                upcomingExamsList.innerHTML = '<li class="text-red-500">Failed to load upcoming exams.</li>';
+            }
+        }
+
+        // Fetch and display Resources
+        async function fetchResources() {
+            if (!currentUserId || currentUserRole === 'pending') { return; } // Only for authenticated and approved users
+            resourcesSection.innerHTML = '<p class="text-gray-500">Loading resources...</p>';
+            try {
+                const resourceAreas = [
+                    "Criminal Jurisprudence and Procedure",
+                    "Law Enforcement Administration",
+                    "Criminalistics",
+                    "Crime Detection and Investigation",
+                    "Sociology of Crimes and Ethics",
+                    "Correctional Administration"
+                ];
+
+                resourcesSection.innerHTML = ''; // Clear previous resources
+
+                for (const area of resourceAreas) {
+                    const areaDocRef = doc(db, `artifacts/${appId}/public/data/resources`, area);
+                    const areaDocSnap = await getDoc(areaDocRef);
+
+                    const folderDiv = document.createElement('div');
+                    folderDiv.classList.add('resource-folder');
+                    folderDiv.innerHTML = `
+                        <h3 class="font-semibold text-gray-800">${area}</h3>
+                    `;
+                    resourcesSection.appendChild(folderDiv);
+
+                    const contentDiv = document.createElement('div');
+                    contentDiv.classList.add('resource-folder-content');
+                    resourcesSection.appendChild(contentDiv);
+
+                    folderDiv.addEventListener('click', () => {
+                        contentDiv.classList.toggle('hidden'); // Toggle visibility
+                    });
+
+                    if (areaDocSnap.exists()) {
+                        const subjects = areaDocSnap.data().subjects || {};
+                        const subjectList = document.createElement('ul');
+                        subjectList.classList.add('list-disc', 'list-inside', 'text-gray-700'); // Add bullet points
+                        contentDiv.appendChild(subjectList);
+
+                        if (Object.keys(subjects).length === 0) {
+                            subjectList.innerHTML = '<li>No subjects available for this area.</li>';
+                        } else {
+                            for (const subjectName in subjects) {
+                                const subjectLi = document.createElement('li');
+                                subjectLi.classList.add('mt-2', 'font-medium');
+                                subjectLi.textContent = subjectName;
+                                subjectList.appendChild(subjectLi);
+
+                                const filesList = document.createElement('ul');
+                                filesList.classList.add('list-none', 'pl-5', 'text-sm');
+                                subjectLi.appendChild(filesList);
+
+                                if (subjects[subjectName] && subjects[subjectName].length > 0) {
+                                    subjects[subjectName].forEach(file => {
+                                        const fileLi = document.createElement('li');
+                                        fileLi.classList.add('bg-gray-50', 'rounded-md', 'p-2', 'mb-1', 'flex', 'items-center', 'justify-between');
+                                        fileLi.innerHTML = `
+                                            <span>📄 ${file.fileName}</span>
+                                            ${file.fileURL ? `<a href="${file.fileURL}" target="_blank" class="text-blue-600 hover:underline">Download</a>` : ''}
+                                        `;
+                                        filesList.appendChild(fileLi);
+                                    });
+                                } else {
+                                    filesList.innerHTML = '<li class="text-gray-500">No files in this subject.</li>';
+                                }
+                            }
+                        }
+                    } else {
+                        contentDiv.innerHTML = '<p class="text-gray-500">No subjects available for this area.</p>';
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching resources:", error);
+                resourcesSection.innerHTML = '<p class="text-red-500">Failed to load resources.</p>';
+            }
+        }
+
+
+        // --- Admin Specific Functions ---
+
+        // Fetch and display Pending Users
+        async function fetchPendingUsers() {
+            if (currentUserRole !== 'admin') return; // Only for admins
+            pendingUsersList.innerHTML = '<li>Loading pending users...</li>';
+            try {
+                const usersCol = collection(db, `artifacts/${appId}/users`);
+                const q = query(usersCol, where("role", "==", "pending"));
+
+                onSnapshot(q, (snapshot) => {
+                    if (snapshot.empty) {
+                        pendingUsersList.innerHTML = '<li>No pending users.</li>';
+                        return;
+                    }
+                    pendingUsersList.innerHTML = ''; // Clear previous list
+                    snapshot.forEach(userDoc => {
+                        const userData = userDoc.data();
+                        const listItem = document.createElement('li');
+                        listItem.classList.add('flex', 'justify-between', 'items-center', 'bg-yellow-50', 'border-l-4', 'border-yellow-500', 'p-3', 'mb-2', 'rounded-md');
+                        listItem.innerHTML = `
+                            <span>${userData.email}</span>
+                            <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded-full text-sm approve-user-btn" data-uid="${userDoc.id}">Approve</button>
+                        `;
+                        pendingUsersList.appendChild(listItem);
+                    });
+
+                    // Add event listeners to newly created approve buttons
+                    document.querySelectorAll('.approve-user-btn').forEach(button => {
+                        button.onclick = (e) => approveUser(e.target.dataset.uid);
+                    });
+                });
+            } catch (error) {
+                console.error("Error fetching pending users:", error);
+                pendingUsersList.innerHTML = '<li>Failed to load pending users.</li>';
+            }
+        }
+
+        // Approve User function (Admin action)
+        async function approveUser(uid) {
+            if (currentUserRole !== 'admin') return; // Ensure only admin can approve
+            try {
+                const userDocRef = doc(db, `artifacts/${appId}/users`, uid);
+                await updateDoc(userDocRef, { role: 'user' });
+                console.log(`User ${uid} approved successfully.`);
+                // fetchPendingUsers() will automatically update due to onSnapshot
+            } catch (error) {
+                console.error("Error approving user:", error);
+                // Optionally show a message to the admin
+            }
+        }
+
+        // Add Announcement Form Submission (Admin action)
+        addAnnouncementForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            hideMessage(announcementSuccessMessage);
+            hideMessage(announcementErrorMessage);
+
+            if (currentUserRole !== 'admin') {
+                showMessage(announcementErrorMessage, 'You do not have permission to post announcements.', 'error');
+                return;
+            }
+
+            const title = announcementTitleInput.value;
+            const content = announcementContentInput.value;
+
+            try {
+                await addDoc(collection(db, `artifacts/${appId}/public/data/announcements`), {
+                    title: title,
+                    content: content,
+                    createdAt: serverTimestamp()
+                });
+                showMessage(announcementSuccessMessage, 'Announcement posted successfully!', 'success');
+                addAnnouncementForm.reset();
+            } catch (error) {
+                console.error("Error adding announcement:", error);
+                showMessage(announcementErrorMessage, 'Failed to post announcement.', 'error');
+            }
+        });
+
+        // Add Upcoming Exam Form Submission (Admin action)
+        addExamForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            hideMessage(examSuccessMessage);
+            hideMessage(examErrorMessage);
+
+            if (currentUserRole !== 'admin') {
+                showMessage(examErrorMessage, 'You do not have permission to add exams.', 'error');
+                return;
+            }
+
+            const title = examTitleInput.value;
+            const date = examDateInput.value; // Date string (YYYY-MM-DD)
+
+            try {
+                await addDoc(collection(db, `artifacts/${appId}/public/data/upcomingExams`), {
+                    title: title,
+                    date: date // Store as string for simplicity; convert to Date object for display
+                });
+                showMessage(examSuccessMessage, 'Upcoming exam added successfully!', 'success');
+                addExamForm.reset();
+            } catch (error) {
+                console.error("Error adding exam:", error);
+                showMessage(examErrorMessage, 'Failed to add exam.', 'error');
+            }
+        });
+
+        // Add Resource Form Submission (Admin action)
+        addResourceForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            hideMessage(resourceSuccessMessage);
+            hideMessage(resourceErrorMessage);
+
+            if (currentUserRole !== 'admin') {
+                showMessage(resourceErrorMessage, 'You do not have permission to manage resources.', 'error');
+                return;
+            }
+
+            const area = resourceAreaSelect.value;
+            const subject = resourceSubjectInput.value;
+            const filename = resourceFilenameInput.value;
+            const fileUrl = resourceFileUrlInput.value;
+
+            if (!area || !subject || !filename) {
+                showMessage(resourceErrorMessage, 'Please fill in all required fields (Area, Subject, File Name).', 'error');
+                return;
+            }
+
+            try {
+                const resourceDocRef = doc(db, `artifacts/${appId}/public/data/resources`, area);
+                const docSnap = await getDoc(resourceDocRef);
+
+                let subjectsData = {};
+                if (docSnap.exists()) {
+                    subjectsData = docSnap.data().subjects || {};
+                }
+
+                if (!subjectsData[subject]) {
+                    subjectsData[subject] = [];
+                }
+                subjectsData[subject].push({
+                    fileName: filename,
+                    fileURL: fileUrl || null,
+                    uploadedAt: serverTimestamp()
+                });
+
+                await setDoc(resourceDocRef, { subjects: subjectsData }, { merge: true }); // Use setDoc with merge to update
+                showMessage(resourceSuccessMessage, 'Resource added successfully!', 'success');
+                addResourceForm.reset();
+            } catch (error) {
+                console.error("Error adding resource:", error);
+                showMessage(resourceErrorMessage, 'Failed to add resource.', 'error');
+            }
+        });
+
+        // --- Account Settings Update Functions ---
+
+        // Update Email Form Submission
+        updateEmailForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            hideMessage(updateEmailErrorMessage);
+            hideMessage(updateEmailSuccessMessage);
+
+            const newEmail = newEmailInput.value;
+            const currentPassword = currentPasswordEmailInput.value;
+            const user = auth.currentUser;
+
+            if (!user) {
+                showMessage(updateEmailErrorMessage, 'You must be logged in to update your email.', 'error');
+                return;
+            }
+
+            const credential = EmailAuthProvider.credential(user.email, currentPassword);
+
+            try {
+                await reauthenticateWithCredential(user, credential);
+                await updateEmail(user, newEmail);
+
+                // Also update email in Firestore user document
+                const userDocRef = doc(db, `artifacts/${appId}/users`, user.uid);
+                await updateDoc(userDocRef, { email: newEmail });
+
+                showMessage(updateEmailSuccessMessage, 'Email updated successfully!', 'success');
+                updateEmailForm.reset();
+            } catch (error) {
+                console.error("Email update error:", error);
+                let errorMessage = "Failed to update email. Please try again.";
+                if (error.code === 'auth/wrong-password') {
+                    errorMessage = 'Incorrect current password.';
+                } else if (error.code === 'auth/requires-recent-login') {
+                    errorMessage = 'Please log in again to update your email.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Please enter a valid email address.';
+                } else if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = 'This email is already in use by another account.';
+                }
+                showMessage(updateEmailErrorMessage, errorMessage, 'error');
+            }
+        });
+
+        // Update Password Form Submission
+        updatePasswordForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            hideMessage(updatePasswordErrorMessage);
+            hideMessage(updatePasswordSuccessMessage);
+
+            const newPassword = newPasswordInput.value;
+            const confirmNewPassword = confirmNewPasswordInput.value;
+            const currentPassword = currentPasswordPasswordInput.value;
+            const user = auth.currentUser;
+
+            if (!user) {
+                showMessage(updatePasswordErrorMessage, 'You must be logged in to change your password.', 'error');
+                return;
+            }
+            if (newPassword !== confirmNewPassword) {
+                showMessage(updatePasswordErrorMessage, 'New passwords do not match.', 'error');
+                return;
+            }
+            if (newPassword.length < 6) {
+                showMessage(updatePasswordErrorMessage, 'New password must be at least 6 characters long.', 'error');
+                return;
+            }
+
+            const credential = EmailAuthProvider.credential(user.email, currentPassword);
+
+            try {
+                await reauthenticateWithCredential(user, credential);
+                await updatePassword(user, newPassword);
+                showMessage(updatePasswordSuccessMessage, 'Password changed successfully!', 'success');
+                updatePasswordForm.reset();
+            } catch (error) {
+                console.error("Password update error:", error);
+                let errorMessage = "Failed to change password. Please try again.";
+                if (error.code === 'auth/wrong-password') {
+                    errorMessage = 'Incorrect current password.';
+                } else if (error.code === 'auth/requires-recent-login') {
+                    errorMessage = 'Please log in again to change your password.';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = 'New password is too weak. Choose a stronger one.';
+                }
+                showMessage(updatePasswordErrorMessage, errorMessage, 'error');
+            }
+        });
+
+    </script>
+</body>
+</html>
